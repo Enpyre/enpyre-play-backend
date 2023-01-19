@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "enpyre-play"
+version = "0.1.0"
+description = "Learn, code and play games"
+authors = ["Vitor Nere <vitor.nere@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.5"
+djangorestframework = "^3.14.0"
+python-decouple = "^3.7"
+psycopg2 = "^2.9.5"
+gunicorn = "^20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.8.0"
+pylint = "^2.15.10"
+pre-commit = "^2.21.0"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+pytest-django = "^4.5.2"
+pytest-mock = "^3.10.0"
+pytest-env = "^0.8.1"
+pylint-django = "^2.5.3"
+django-stubs = {extras = ["compatible-mypy"], version = "^1.13.1"}
+mypy = "0.982"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

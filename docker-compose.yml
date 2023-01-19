@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  enpyre_play:
+    container_name: enpyre_play
+    env_file: .env
+    build:
+      context: .
+      args:
+        ENVIRONMENT: development
+    volumes:
+      - .:/code/.
+    ports:
+      - "8000:8000"
+    depends_on:
+      - enpyre_postgres
+    networks:
+      - default
+  enpyre_postgres:
+    image: postgres:14-alpine
+    container_name: enpyre_postgres
+    volumes:
+      - ./.ignore/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: enpyre
+      POSTGRES_PASSWORD: enpyre
+      POSTGRES_DB: enpyre_db
+    ports:
+      - "5432:5432"
+    networks:
+      - default
