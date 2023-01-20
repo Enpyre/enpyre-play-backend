@@ -35,7 +35,7 @@ python manage.py migrate
 
 echo "Rodando o servidor"
 if test $ENVIRONMENT = 'development' ; then
-  gunicorn enpyre_play.wsgi -b 0.0.0.0:8000 --reload --log-level DEBUG --workers 1
+  gunicorn enpyre_play.wsgi -b 0.0.0.0:8000 --reload --log-level DEBUG --workers 1 --graceful-timeout 0
 else
-  gunicorn enpyre_play.wsgi -b 0.0.0.0:8000 --log-level INFO --workers 2
+  gunicorn enpyre_play.wsgi -b 0.0.0.0:8000 --log-level INFO --workers 2 --graceful-timeout 60
 fi
