@@ -24,3 +24,9 @@ bash:
 
 shell:
 	doppler run -- python manage.py shell
+
+migrations:
+	doppler run -- python manage.py makemigrations
+
+migrate:
+	doppler run -- python manage.py migrate

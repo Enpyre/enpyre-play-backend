@@ -1,15 +1,16 @@
 #!/bin/bash
 echo "Criando atalho e inserindo no bashrc"
-# echo alias shell="'doppler run -- python manage.py shell'" >> ~/.bashrc
-# echo alias test="'doppler run -- pytest'" >> ~/.bashrc
-echo alias shell="'python manage.py shell'" >> ~/.bashrc
-echo alias test="'pytest'" >> ~/.bashrc
+echo alias shell="'doppler run -- python manage.py shell'" >> ~/.bashrc
+echo alias test="'doppler run -- pytest'" >> ~/.bashrc
+# echo alias shell="'python manage.py shell'" >> ~/.bashrc
+# echo alias test="'pytest'" >> ~/.bashrc
 
 echo "Esperando o banco de dados conectar"
 postgres_ready() {
 python3 << END
 import sys
 import psycopg2
+import traceback
 from decouple import config
 try:
     conn = psycopg2.connect(
@@ -20,6 +21,7 @@ try:
         port=config('DB_PORT', default=5432, cast=int),
     )
 except psycopg2.OperationalError:
+    traceback.print_exc()
     sys.exit(-1)
 sys.exit(0)
 END
