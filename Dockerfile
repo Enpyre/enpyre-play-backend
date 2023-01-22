@@ -1,10 +1,14 @@
 FROM python:3.10-slim-bullseye
 
-RUN apt update -y && apt install -y vim curl libpq-dev gcc gnupg2
+ARG ENVIRONMENT
 
-# RUN curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - \
-#   && echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list
-# RUN apt update -y && apt install -y doppler
+USER root
+
+RUN apt update -y && apt install -y vim curl libpq-dev gcc gnupg2 make
+
+RUN curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - \
+  && echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list
+RUN apt update -y && apt install -y doppler
 
 RUN apt install --no-install-recommends -y ca-certificates locales locales-all \
   && cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime \
@@ -32,5 +36,5 @@ RUN ./install.sh
 
 COPY . .
 
-# ENTRYPOINT ["doppler", "run", "--"]
+ENTRYPOINT ["doppler", "run", "--"]
 CMD ["./start.sh"]
