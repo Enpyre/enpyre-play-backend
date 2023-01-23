@@ -135,5 +135,4 @@ dmypy.json
 .idea
 .ignore
 
-/static/*
-/static/.gitkeep
+enpyre_play/static
