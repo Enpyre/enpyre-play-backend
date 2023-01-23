@@ -30,3 +30,6 @@ migrations:
 
 migrate:
 	doppler run -- python manage.py migrate
+
+collectstatic:
+	doppler run -- python manage.py collectstatic --noinput

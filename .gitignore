@@ -134,3 +134,6 @@ dmypy.json
 .env
 .idea
 .ignore
+
+/static/*
+/static/.gitkeep
