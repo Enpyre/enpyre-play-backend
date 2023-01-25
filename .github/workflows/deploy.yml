@@ -65,6 +65,8 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     needs: [lint] #, tests]
+    outputs:
+      image: ${{ steps.build_image.outputs.image }}
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
