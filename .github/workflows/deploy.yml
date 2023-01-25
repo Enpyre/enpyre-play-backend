@@ -111,18 +111,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Pegando a última task definition
+      # Pegando a última task definition e colocando em task-definition.json
       - name: Get last task definition
-        id: get_last_task_definition
         run: |
-          LAST_TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix ${{ secrets.ECS_SERVICE }} --sort DESC --query 'taskDefinitionArns[0]' --output text)
-          echo "::set-output name=last_task_definition::$LAST_TASK_DEFINITION"
+          LAST_TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix enpyre-play-production --sort DESC --query 'taskDefinitionArns[0]' --output text)
+          aws ecs describe-task-definition --task-definition $LAST_TASK_DEFINITION > task-definition.json
 
       # Reiniciando o serviço
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.get_last_task_definition.outputs.last_task_definition }}
+          task-definition: task-definition.json
           service: ${{ secrets.ECS_SERVICE }}
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
