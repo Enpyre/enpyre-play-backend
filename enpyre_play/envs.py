@@ -7,7 +7,7 @@ ENVIRONMENT = config('ENVIRONMENT', default=EnvironmentSet.DEVELOPMENT, cast=Env
 GITHUB_KEY = config('GITHUB_KEY', default=None)
 GITHUB_SECRET = config('GITHUB_SECRET', default=None)
 GOOGLE_OAUTH2_KEY = config('GOOGLE_OAUTH2_KEY', default=None)
-GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default=None)
+GOOGLE_OAUTH2_SECRET = config('GOOGLE_OAUTH2_SECRET', default=None)
 
 DB_NAME = config('DB_NAME', default='enpyre_db')
 DB_USER = config('DB_USER', default='enpyre')

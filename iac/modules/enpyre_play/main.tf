@@ -25,7 +25,7 @@ module "ecs" {
   health_check_interval = 30
   health_check_timeout = 5
   route_zone_id = var.route_zone_id
-  domain = "enpyre-play.pubnic.com.br"
+  domain = "api.enpyre-play.pubnic.com.br"
   lb_dns_name = var.lb_dns_name
   lb_zone_id = var.lb_zone_id
   alb_security_group_id = var.alb_security_group_id
