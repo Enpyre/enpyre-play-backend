@@ -1,4 +1,4 @@
-from enpyre_play.envs import GITHUB_KEY, GITHUB_SECRET, GOOGLE_OAUTH2_KEY, GOOGLE_OAUTH2_SECRET
+from enpyre_play.envs import GITHUB_KEY, GITHUB_SECRET
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -20,7 +20,6 @@ AUTH_PASSWORD_VALIDATORS = [
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -43,19 +42,11 @@ SOCIAL_AUTH_PIPELINE = (
     'enpyre_play.users.social_pipeline.save_avatar',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = GOOGLE_OAUTH2_KEY
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = GOOGLE_OAUTH2_SECRET
-SOCIAL_AUTH_GOOGLE_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
-
 SOCIAL_AUTH_GITHUB_KEY = GITHUB_KEY
 SOCIAL_AUTH_GITHUB_SECRET = GITHUB_SECRET
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email', 'read:user']
 
-REST_SOCIAL_OAUTH_REDIRECT_URI = '/login/github/'
-REST_SOCIAL_DOMAIN_FROM_ORIGIN = False
+REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'http://localhost:3000/login/callback/'
 
 SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
