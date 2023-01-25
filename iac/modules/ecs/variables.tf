@@ -154,3 +154,21 @@ variable "account_id" {
   description = "The account id to use for the load balancer roles"
   type = string
 }
+
+variable "deployment_maximum_percent" {
+  description = "The maximum number of instances to deploy at once"
+  type = number
+  default = 200
+}
+
+variable "deployment_minimum_healthy_percent" {
+  description = "The minimum number of instances to keep healthy"
+  type = number
+  default = 100
+}
+
+variable "rollback_if_deployment_fails" {
+  description = "If the deployment should rollback if it fails"
+  type = bool
+  default = true
+}

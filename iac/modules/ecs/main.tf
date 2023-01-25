@@ -64,8 +64,15 @@ resource "aws_ecs_service" "app" {
   cluster         = aws_ecs_cluster.app.id
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.app.arn
+  deployment_maximum_percent = var.deployment_maximum_percent
+  deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
   desired_count   = var.replicas
   force_new_deployment = true
+
+  deployment_circuit_breaker {
+    enable = var.rollback_if_deployment_fails
+    rollback = var.rollback_if_deployment_fails
+  }
 
   network_configuration {
     security_groups = [var.alb_security_group_id]
