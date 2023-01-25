@@ -6,7 +6,7 @@ module "ecs" {
   spot = true
   ecs_cpu = 256
   ecs_memory = 512
-  image = "public.ecr.aws/u2o6y3c6/enpyre-play:latest"
+  image = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/enpyre-play:latest"
   container_port = 8000
   container_env = [
     {
