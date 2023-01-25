@@ -15,9 +15,8 @@ module "ecs" {
     }
   ]
   region = var.region
-  replicas = 1
-  deployment_maximum_percent = 200
-  deployment_minimum_healthy_percent = 100
+  replicas = 2
+  deployment_minimum_healthy_percent = 50
   rollback_if_deployment_fails = true
   subnet_ids = var.subnet_ids
   logs_retention_in_days = 7
