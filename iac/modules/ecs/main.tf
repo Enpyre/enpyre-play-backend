@@ -51,6 +51,16 @@ resource "aws_ecs_task_definition" "app" {
         "awslogs-region": "${var.region}",
         "awslogs-stream-prefix": "ecs"
       }
+    },
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "curl -f http://localhost:${var.container_port}${var.health_check} || exit 1"
+      ],
+      "interval": var.health_check_interval,
+      "timeout": var.health_check_timeout,
+      "retries": 3,
+      "startPeriod": 60
     }
   }
 ])
@@ -68,6 +78,7 @@ resource "aws_ecs_service" "app" {
   deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
   desired_count   = var.replicas
   force_new_deployment = true
+  health_check_grace_period_seconds = 60
 
   deployment_circuit_breaker {
     enable = var.rollback_if_deployment_fails

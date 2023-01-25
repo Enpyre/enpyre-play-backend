@@ -16,6 +16,8 @@ module "ecs" {
   ]
   region = var.region
   replicas = 2
+  ecs_autoscale_max_instances = 2
+  ecs_autoscale_min_instances = 2
   deployment_minimum_healthy_percent = 50
   rollback_if_deployment_fails = true
   subnet_ids = var.subnet_ids
