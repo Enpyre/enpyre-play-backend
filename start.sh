@@ -33,7 +33,10 @@ until postgres_ready; do
 done
 
 echo "Rodando as migrações"
-python manage.py migrate
+make migrate
+
+echo "Coletando arquivos estáticos"
+make collectstatic
 
 echo "Rodando o servidor"
 if test $ENVIRONMENT = 'development' ; then
