@@ -23,7 +23,7 @@ module "ecs" {
   subnet_ids = var.subnet_ids
   logs_retention_in_days = 7
   tags = var.tags
-  deregistration_delay = 300
+  deregistration_delay = 5
   health_check = "/"
   health_check_matcher = "200"
   health_check_interval = 30
