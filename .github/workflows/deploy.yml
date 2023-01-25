@@ -6,39 +6,39 @@ env:
   PYTHON_VERSION: '3.10.7'
 
 jobs:
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Set up Python ${{ env.PYTHON_VERSION }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ env.PYTHON_VERSION }}
-  #     - name: Cache pip
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
-  #         key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-  #     - name: Install Poetry
-  #       run: |
-  #         pip install poetry
-  #         poetry config virtualenvs.create false
-  #     - name: Install dependencies
-  #       run: poetry install --no-interaction --no-ansi -vvv
-  #     - name: Cache pre commit hooks
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/pre-commit
-  #         key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('.github/workflows/deploy_production.yml') }}
-  #     - name: Cache mypy types
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: .mypy_cache
-  #         key: ${{ runner.os }}-mypy-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('mypy.ini') }}
-  #     - name: Lint
-  #       run: make pc-run-all
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
+          key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-ansi -vvv
+      - name: Cache pre commit hooks
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('.github/workflows/deploy_production.yml') }}
+      - name: Cache mypy types
+        uses: actions/cache@v3
+        with:
+          path: .mypy_cache
+          key: ${{ runner.os }}-mypy-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('mypy.ini') }}
+      - name: Lint
+        run: make pc-run-all
   # tests:
   #   runs-on: ubuntu-latest
   #   steps:
@@ -64,10 +64,7 @@ jobs:
   #       run: make tests-local
   build_and_push:
     runs-on: ubuntu-latest
-    # needs: [lint] #, tests]
-    outputs:
-      image: ${{ steps.build_image.outputs.image }}
-      test: ${{ steps.build_image.outputs.test }}
+    needs: [lint] #, tests]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
@@ -80,7 +77,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          mask-aws-account-id: 'no'
 
       ## Fazendo login no AWS ECR
       - name: Login to Amazon ECR
@@ -96,8 +92,6 @@ jobs:
           IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
         shell: bash
         run: |
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          echo "test=hello" >> $GITHUB_OUTPUT
           docker build --build-arg ENVIRONMENT=production -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
   deploy:
@@ -108,40 +102,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      ## Configurando as credenciais AWS
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ${{ secrets.AWS_REGION }}
+      # Configurando as credenciais AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      # # Pegando a última task definition e colocando em task-definition.json
-      # - name: Get last task definition
-      #   run: |
-      #     LAST_TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix enpyre-play-production --sort DESC --query 'taskDefinitionArns[0]' --output text)
-      #     aws ecs describe-task-definition --task-definition $LAST_TASK_DEFINITION > task-definition.json
-
-      - name: Print build_and_push outputs
+      # Force redeploy of the service
+      - name: Force deployment
         run: |
-          echo ${{needs.build_and_push.outputs}}
-          echo ${{needs.build_and_push.outputs.image}}
-          echo ${{needs.build_and_push.outputs.test}}
-          echo ${{needs.build_and_push.outputs.*}}
-
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     image: ${{ needs.build_and_push.outputs }}
-      #     task-definition: 'task-definition.json'
-      #     container-name: 'enpyre-play'
-
-      # # Reiniciando o serviço
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: ${{ secrets.ECS_SERVICE }}
-      #     cluster: ${{ secrets.ECS_CLUSTER }}
-      #     wait-for-service-stability: true
+          aws ecs update-service --cluster ${{ secrets.CLUSTER_NAME }} --service ${{ secrets.SERVICE_NAME }} --force-new-deployment
+          aws ecs wait services-stable --cluster ${{ secrets.CLUSTER_NAME }} --services ${{ secrets.SERVICE_NAME }}
