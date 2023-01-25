@@ -21,7 +21,7 @@ jobs:
       - name: Cache pip
         uses: actions/cache@v3
         with:
-          path: /opt/hostedtoolcache/Python/${{ inputs.python-version }}/x64/
+          path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
           key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         run: |
@@ -54,7 +54,7 @@ jobs:
   #     - name: Cache pip
   #       uses: actions/cache@v3
   #       with:
-  #         path: /opt/hostedtoolcache/Python/${{ inputs.python-version }}/x64/
+  #         path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
   #         key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
   #     - name: Install Poetry
   #       run: |
