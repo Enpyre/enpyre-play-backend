@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_social_auth.serializers import UserSerializer
+
+from .serializers import UserSerializer
 
 
 class ProfileView(RetrieveAPIView):
