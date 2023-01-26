@@ -39,32 +39,53 @@ jobs:
           key: ${{ runner.os }}-mypy-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('mypy.ini') }}
       - name: Lint
         run: make pc-run-all
-  # tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Set up Python ${{ env.PYTHON_VERSION }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ env.PYTHON_VERSION }}
-  #     - name: Cache pip
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
-  #         key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-  #     - name: Install Poetry
-  #       run: |
-  #         pip install poetry
-  #         poetry config virtualenvs.create false
-  #     - name: Install dependencies
-  #       run: poetry install --no-interaction --no-ansi -vvv
-  #     - name: Tests
-  #       run: make tests-local
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: enpyre
+          POSTGRES_PASSWORD: enpyre
+          POSTGRES_DB: enpyre_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
+          key: python${{ env.PYTHON_VERSION }}-os-${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-ansi -vvv
+      - name: Tests
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_TESTS }}
+        run: |
+          echo Installing Doppler
+          (curl -Ls https://cli.doppler.com/install.sh || wget -qO- https://cli.doppler.com/install.sh) | sudo bash
+          echo Doppler Installed
+          echo Running Tests
+          doppler run -- pytest --cov --cov-report xml:coverage.xml
   build_and_push:
     runs-on: ubuntu-latest
-    needs: [lint] #, tests]
+    needs: [lint, tests]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
