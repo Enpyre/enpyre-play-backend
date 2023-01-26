@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Criando atalho e inserindo no bashrc"
 echo alias shell="'doppler run -- python manage.py shell'" >> ~/.bashrc
-echo alias test="'doppler run -- pytest'" >> ~/.bashrc
+echo alias tests="'doppler run -- pytest'" >> ~/.bashrc
 # echo alias shell="'python manage.py shell'" >> ~/.bashrc
 # echo alias test="'pytest'" >> ~/.bashrc
 
