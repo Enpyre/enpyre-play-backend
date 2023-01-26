@@ -1,5 +1,7 @@
 from django.urls import path
 
-from .views import UserJWTDetailView
+from .views import ProfileView
 
-urlpatterns = [path('jwt/', UserJWTDetailView.as_view(), name='current_user_jwt')]
+urlpatterns = [
+    path('profile/', ProfileView.as_view(), name='profile'),
+]

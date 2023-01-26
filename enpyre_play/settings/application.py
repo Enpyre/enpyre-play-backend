@@ -8,7 +8,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
     'social_django',
     'rest_social_auth',
     'enpyre_play.users',
