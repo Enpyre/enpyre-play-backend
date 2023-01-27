@@ -1,5 +1,3 @@
-import hashlib
-
 from rest_framework.response import Response
 
 
@@ -14,14 +12,12 @@ def save_avatar(strategy, details, *args, user=None, **kwargs):
         backend_name = kwargs['backend'].__class__.__name__.lower()
         response = kwargs.get('response', {})
         picture = None
-        if 'googleoauth2' in backend_name and response.get('image', {}).get('url'):
-            picture = response['image']['url'].split('?')[0]
-        elif 'github' in backend_name and response.get('avatar_url'):
+        if 'github' in backend_name and response.get('avatar_url'):
             picture = response['avatar_url']
         else:
-            picture = 'http://www.gravatar.com/avatar/'
-            picture += hashlib.md5(user.email.lower().encode('utf8')).hexdigest()
-            picture += '?size=100'
+            picture = 'https://api.dicebear.com/5.x/bottts-neutral/svg?'
+            picture += f'seed={user.username}'
+            picture += '&size=100&backgroundType=gradientLinear,solid'
         if picture and user.picture != picture:
             user.picture = picture
             strategy.storage.user.changed(user)

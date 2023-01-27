@@ -11,6 +11,7 @@ INSTALLED_APPS = [
     'social_django',
     'rest_social_auth',
     'enpyre_play.users',
+    'enpyre_play.projects',
 ]
 
 MIDDLEWARE = [
