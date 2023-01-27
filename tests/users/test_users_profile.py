@@ -15,5 +15,8 @@ class TestUsersProfile:
             email='test@enpyre.com.br',
             first_name='Test',
             last_name='User',
-            picture='http://www.gravatar.com/avatar/88292cf6edfe61129f8c570ffaf92825?size=100',
+            picture=(
+                'https://api.dicebear.com/5.x/bottts-neutral/svg?'
+                + 'seed=test&size=100&backgroundType=gradientLinear,solid'
+            ),
         )
