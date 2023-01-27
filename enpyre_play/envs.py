@@ -15,3 +15,5 @@ DB_HOST = config('DB_HOST', default='enpyre_postgres')
 DB_PORT = config('DB_PORT', default=5432, cast=int)
 
 JWT_SECRET_KEY = config('JWT_SECRET_KEY', default=None)
+
+SENTRY_DSN = config('SENTRY_DSN', default=None)
