@@ -31,6 +31,8 @@ psycopg2-binary = "^2.9.5"
 
 [tool.poetry.group.only-prod.dependencies]
 psycopg2 = "^2.9.5"
+newrelic = "^8.5.0"
+sentry-sdk = "^1.14.0"
 
 [build-system]
 requires = ["poetry-core"]
