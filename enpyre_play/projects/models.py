@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from enpyre_play.models import BaseModel
 from enpyre_play.users.utils import get_sentinel_user
 
 
-class Project(models.Model):
+class Project(BaseModel):
     title = models.CharField(max_length=100, help_text='Title of the project')
     description = models.TextField(null=True, blank=True, help_text='Description of the project')
     code = models.JSONField(null=True, blank=False, help_text='Code of the project')

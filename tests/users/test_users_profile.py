@@ -1,4 +1,5 @@
 import pytest
+from rest_framework.test import APIClient
 
 
 class TestUsersProfile:
@@ -6,7 +7,7 @@ class TestUsersProfile:
     def setup(self):
         self.endpoint = '/users/profile/'
 
-    def test_get_profile(self, authenticated_client):
+    def test_get_profile(self, authenticated_client: APIClient):
         response = authenticated_client.get(self.endpoint)
         assert response.status_code == 200
         response_json: dict = response.json()

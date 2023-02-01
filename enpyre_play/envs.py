@@ -15,3 +15,5 @@ DB_HOST = config('DB_HOST', default='enpyre_postgres')
 DB_PORT = config('DB_PORT', default=5432, cast=int)
 
 JWT_SECRET_KEY = config('JWT_SECRET_KEY', default=None)
+
+PROJECT_LINK_BASE_URL = config('PROJECT_LINK_BASE_URL', default='https://localhost:3000/projects/')
