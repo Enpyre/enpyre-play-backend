@@ -14,7 +14,6 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-added-large-files
       - id: check-merge-conflict
-      - id: requirements-txt-fixer
       - id: debug-statements
       - id: name-tests-test
         args: [--django]
