@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model
+from enpyre_play.users.models import User
 
 
 def get_sentinel_user():
-    return get_user_model().objects.get_or_create(
+    return User.objects.get_or_create(
         username='deleted',
         defaults={
             'email': 'deleted@enpyre.com.br',

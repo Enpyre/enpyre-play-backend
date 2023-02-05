@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ $ENVIRONMENT == "development" ]]; then
     echo "Installing development dependencies..."
-    poetry install --no-interaction --no-ansi -vvv
+    poetry install --no-interaction --no-ansi -vvv --without only-prod
     echo "Installing development dependencies... Done!"
 else
     echo "Installing production dependencies..."

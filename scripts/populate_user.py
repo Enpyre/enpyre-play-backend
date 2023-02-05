@@ -1,11 +1,11 @@
-from django.contrib.auth import get_user_model
+from enpyre_play.users.models import User
 
 
 class PopulateUser:
     @classmethod
     def run(cls, suffix: str = ''):
         _suffix = f'-{suffix}' if suffix else ''
-        user, _ = get_user_model().objects.get_or_create(
+        user, _ = User.objects.get_or_create(
             email=f'test{_suffix}@enpyre.com.br',
             defaults=dict(
                 username=f'test{_suffix}',

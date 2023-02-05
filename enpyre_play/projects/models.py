@@ -1,7 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from enpyre_play.models import BaseModel
+from enpyre_play.users.models import User
 from enpyre_play.users.utils import get_sentinel_user
 
 
@@ -14,6 +14,7 @@ class Project(BaseModel):
     public = models.BooleanField(default=False, help_text='Is the project public?')
 
     user = models.ForeignKey(
-        get_user_model(),
+        User,
         on_delete=models.SET(get_sentinel_user),
+        related_name='projects',
     )
