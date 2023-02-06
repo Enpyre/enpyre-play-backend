@@ -49,6 +49,7 @@ SOCIAL_AUTH_GITHUB_SECRET = GITHUB_SECRET
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email', 'read:user']
 
 REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'http://localhost:3000/login/callback/'
+REST_SOCIAL_VERBOSE_ERRORS = True
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),

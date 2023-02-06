@@ -1,7 +1,9 @@
-from django.contrib.auth import get_user_model
+from enpyre_play.projects.models import Project
+from enpyre_play.users.models import User
 
 
 class CleanDB:
     @classmethod
     def run(cls):
-        get_user_model().objects.all().delete()
+        Project.objects.all().delete()
+        User.objects.all().delete()

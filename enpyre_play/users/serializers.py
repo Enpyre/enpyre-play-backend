@@ -1,8 +1,9 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
+from enpyre_play.users.models import User
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'picture']
