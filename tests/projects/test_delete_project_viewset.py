@@ -15,4 +15,5 @@ class TestDeleteProjectViewset:
 
         assert response.status_code == 204
 
-        assert Project.objects.get(id=project.id).count() == 0
+        with pytest.raises(Project.DoesNotExist):
+            Project.objects.get(user=user)
