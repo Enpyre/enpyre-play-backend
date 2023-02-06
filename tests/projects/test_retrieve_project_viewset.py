@@ -12,7 +12,7 @@ class TestRetrieveProjectViewset:
         self.url = '/projects/'
 
     def test_retrieve_project(self, db, user, authenticated_client: APIClient):
-        project = Project.objects.filter(user=user).last()
+        project = Project.objects.get(user=user)
         response = authenticated_client.get(f'{self.url}{project.id}/')
 
         assert response.status_code == 200

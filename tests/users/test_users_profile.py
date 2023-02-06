@@ -12,12 +12,12 @@ class TestUsersProfile:
         assert response.status_code == 200
         response_json: dict = response.json()
         assert response_json.pop('id', None) is not None
-        assert response_json == dict(
-            email='test@enpyre.com.br',
-            first_name='Test',
-            last_name='User',
-            picture=(
+        assert response_json == {
+            'email': 'test@enpyre.com.br',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'picture': (
                 'https://api.dicebear.com/5.x/bottts-neutral/svg?'
                 + 'seed=test&size=100&backgroundType=gradientLinear,solid'
             ),
-        )
+        }

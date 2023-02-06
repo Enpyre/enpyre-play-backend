@@ -12,7 +12,7 @@ class TestUpdateProjectViewset:
         self.url = '/projects/'
 
     def test_update_project(self, db, user, authenticated_client: APIClient):
-        project = Project.objects.filter(user=user).last()
+        project = Project.objects.get(user=user)
 
         response = authenticated_client.put(
             f'{self.url}{project.id}/',
