@@ -96,7 +96,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download coverage
-        if: inputs.coverage == 'true'
         uses: actions/download-artifact@v3
         with:
           name: coverage-${{ github.run_id }}
