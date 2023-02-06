@@ -83,6 +83,29 @@ jobs:
           echo Doppler Installed
           echo Running Tests
           doppler run -- pytest --cov --cov-report xml:coverage.xml
+      - name: Upload coverage to the next step
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ github.run_id }}
+          path: coverage.xml
+  sonar:
+    runs-on: ubuntu-latest
+    needs: [tests]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Download coverage
+        if: inputs.coverage == 'true'
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-${{ github.run_id }}
+          path: .
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   build_and_push:
     runs-on: ubuntu-latest
     needs: [lint, tests]
