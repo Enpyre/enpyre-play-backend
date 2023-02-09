@@ -4,11 +4,15 @@ from enpyre_play.models import BaseModel
 from enpyre_play.users.models import User
 from enpyre_play.users.utils import get_sentinel_user
 
+from .enums import QuizzTypeSet
+
 
 class Quizz(BaseModel):
     title = models.CharField(max_length=100, help_text='Title of the quizz')
     description = models.TextField(null=True, blank=True, help_text='Description of the quizz')
-    quizz_type = models.CharField(max_length=100, help_text='Type of the quizz')
+    quizz_type = models.CharField(
+        max_length=100, help_text='Type of the quizz', default=QuizzTypeSet.MULTIPLE_CHOICE
+    )
 
     owner = models.ForeignKey(
         User,
