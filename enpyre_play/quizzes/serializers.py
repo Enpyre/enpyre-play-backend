@@ -21,6 +21,7 @@ class QuizzAnswerListSerializer(ListSerializer):
     def update(self, instance, validated_data):
         answer_mapping = {answer.id: answer for answer in instance}
         data_mapping = {item.get('id'): item for item in validated_data}
+        print('QuizzAnswerListSerializer update', validated_data)
 
         ret = []
         for answer_id, data in data_mapping.items():
@@ -31,6 +32,11 @@ class QuizzAnswerListSerializer(ListSerializer):
                 setattr(answer, attr, value)
             answer.save()
             ret.append(answer)
+
+        for answer in instance:
+            if answer.id not in data_mapping:
+                answer.delete()
+
         return ret
 
 
@@ -53,6 +59,7 @@ class QuizzQuestionListSerializer(ListSerializer):
     def update(self, instance, validated_data):
         question_mapping = {question.id: question for question in instance}
         data_mapping = {item.get('id'): item for item in validated_data}
+        print('QuizzQuestionListSerializer update', validated_data)
 
         ret = []
         for question_id, data in data_mapping.items():
@@ -63,6 +70,11 @@ class QuizzQuestionListSerializer(ListSerializer):
                 setattr(question, attr, value)
             question.save()
             ret.append(question)
+
+        for question in instance:
+            if question.id not in data_mapping:
+                question.delete()
+
         return ret
 
 
@@ -102,6 +114,8 @@ class QuizzSerializer(ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        print('QuizzSerializer update', validated_data)
+
         request = self.context.get('request')
         if instance.owner_id != request.user.id:
             raise ValidationError('You are not the owner of this quizz')
@@ -113,6 +127,7 @@ class QuizzSerializer(ModelSerializer):
         instance.quizz_type = validated_data.get('quizz_type', instance.quizz_type)
         instance.save()
 
+        updated_questions = []
         for question_data in questions_data:
             answers_data = question_data.pop('answers')
             if 'id' in question_data:
@@ -123,6 +138,9 @@ class QuizzSerializer(ModelSerializer):
                 question.save()
             else:
                 question = QuizzQuestion.objects.create(quizz=instance, **question_data)
+
+            updated_questions.append(question.id)
+
             for answer_data in answers_data:
                 if 'id' in answer_data:
                     answer = QuizzAnswer.objects.get(id=answer_data['id'])
@@ -134,3 +152,9 @@ class QuizzSerializer(ModelSerializer):
                     answer.save()
                 else:
                     QuizzAnswer.objects.create(question=question, **answer_data)
+
+        for question in instance.questions.all():
+            if question.id not in updated_questions:
+                question.delete()
+
+        return instance
