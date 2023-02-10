@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'rest_social_auth',
     'enpyre_play.users',
     'enpyre_play.projects',
+    'enpyre_play.quizzes',
 ]
 
 MIDDLEWARE = [

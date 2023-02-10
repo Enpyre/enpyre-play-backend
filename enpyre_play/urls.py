@@ -16,6 +16,7 @@ domain_urlpatterns: list[URLPattern | URLResolver] = [
     path('', StatusView.as_view(), name='status'),
     path('users/', include('enpyre_play.users.urls'), name='users'),
     path('projects/', include('enpyre_play.projects.urls'), name='projects'),
+    path('quizzes/', include('enpyre_play.quizzes.urls'), name='quizzes'),
 ]
 
 urlpatterns = app_urlpatterns + domain_urlpatterns + staticfiles_urlpatterns()
