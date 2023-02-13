@@ -114,13 +114,14 @@ class QuizzSerializer(ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        print('QuizzSerializer update', validated_data)
-
         request = self.context.get('request')
         if instance.owner_id != request.user.id:
             raise ValidationError('You are not the owner of this quizz')
 
-        questions_data = validated_data.pop('questions')
+        try:
+            questions_data = validated_data.pop('questions')
+        except KeyError:
+            questions_data = []
 
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
@@ -129,7 +130,10 @@ class QuizzSerializer(ModelSerializer):
 
         updated_questions = []
         for question_data in questions_data:
-            answers_data = question_data.pop('answers')
+            try:
+                answers_data = question_data.pop('answers')
+            except KeyError:
+                answers_data = []
             if 'id' in question_data:
                 question = QuizzQuestion.objects.get(id=question_data['id'])
                 question.title = question_data.get('title', question.title)
@@ -153,8 +157,9 @@ class QuizzSerializer(ModelSerializer):
                 else:
                     QuizzAnswer.objects.create(question=question, **answer_data)
 
-        for question in instance.questions.all():
-            if question.id not in updated_questions:
-                question.delete()
+        if not self.partial:
+            for question in instance.questions.all():
+                if question.id not in updated_questions:
+                    question.delete()
 
         return instance
