@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'rest_social_auth',
+    'rest_framework_simplejwt.token_blacklist',
     'enpyre_play.users',
     'enpyre_play.projects',
     'enpyre_play.quizzes',
