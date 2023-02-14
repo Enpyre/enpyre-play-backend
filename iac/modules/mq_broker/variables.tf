@@ -41,6 +41,7 @@ variable "subnet_ids" {
 variable "allowed_security_group_ids" {
   description = "The security group ids to use for amazon mq"
   type        = list(string)
+  default     = []
 }
 
 variable "tags" {
