@@ -107,12 +107,6 @@ variable "audit_log_enabled" {
   default     = true
 }
 
-variable "kms_ssm_key_arn" {
-  description = "The ARN of the KMS key used for encryption at rest"
-  type        = string
-  default     = "alias/aws/ssm"
-}
-
 variable "encryption_enabled" {
   description = "If true, encryption is enabled"
   type        = bool
