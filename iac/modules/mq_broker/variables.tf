@@ -35,7 +35,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "The subnet ids to use for amazon mq"
-  type        = string
+  type        = list(string)
 }
 
 variable "allowed_security_group_ids" {
