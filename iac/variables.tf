@@ -42,3 +42,23 @@ variable "account_id" {
   description = "The account id"
   type = string
 }
+
+variable "mq_admin_password" {
+  description = "The password for the mq admin user"
+  type        = string
+}
+
+variable "mq_admin_user" {
+  description = "The username for the mq admin user"
+  type        = string
+}
+
+variable "mq_application_password" {
+  description = "The password for the mq application user"
+  type        = string
+}
+
+variable "mq_application_user" {
+  description = "The username for the mq application user"
+  type        = string
+}
