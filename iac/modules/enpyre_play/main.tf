@@ -46,6 +46,10 @@ module "mq_broker" {
   namespace                   = "pubnic"
   environment                 = var.environment
 
+  engine_type = "RabbitMQ"
+  engine_version = "3.10.10"
+  audit_log_enabled = false
+
   mq_admin_password           = var.mq_admin_password
   mq_admin_user               = var.mq_admin_user
   mq_application_password     = var.mq_application_password

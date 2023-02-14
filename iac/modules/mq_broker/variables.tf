@@ -74,13 +74,13 @@ variable "deployment_mode" {
 variable "engine_type" {
   description = "Type of broker engine, `ActiveMQ` or `RabbitMQ`"
   type        = string
-  default     = "RabbitMQ"
+  default     = "ActiveMQ"
 }
 
 variable "engine_version" {
   description = "The version of the broker engine"
   type        = string
-  default = "3.10.10"
+  default = "5.17.2"
 }
 
 variable "host_instance_type" {
