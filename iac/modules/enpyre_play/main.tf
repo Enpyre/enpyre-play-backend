@@ -56,7 +56,7 @@ module "mq_broker" {
   mq_application_user         = var.mq_application_user
 
   vpc_id                      = var.vpc_id
-  subnet_ids                  = var.subnet_ids
+  subnet_ids                  = [var.subnet_ids[0]]
 
   tags                        = var.tags
 }
