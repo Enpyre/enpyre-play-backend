@@ -16,7 +16,7 @@ module "mq_broker" {
   subnet_ids = var.subnet_ids
 
   allowed_security_group_ids = var.allowed_security_group_ids
-  allowed_ingress_ports      = [8162, 5671]
+  allowed_ingress_ports      = var.allowed_ingress_ports
 
 
   apply_immediately          = var.apply_immediately

@@ -59,6 +59,4 @@ module "mq_broker" {
   subnet_ids                  = var.subnet_ids
 
   tags                        = var.tags
-
-  depends_on                  = [module.ecs]
 }

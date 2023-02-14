@@ -44,6 +44,12 @@ variable "allowed_security_group_ids" {
   default     = []
 }
 
+variable "allowed_ingress_ports" {
+  description = "The ingress ports to use for amazon mq"
+  type        = list(number)
+  default     = []
+}
+
 variable "tags" {
   description = "The tags to use for amazon mq"
   type        = map(string)
