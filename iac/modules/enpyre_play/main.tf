@@ -54,7 +54,9 @@ module "mq_broker" {
   vpc_id                      = var.vpc_id
   subnet_ids                  = var.subnet_ids
 
-  allowed_security_group_ids  = [module.ecs.ecs_security_group_id, var.alb_security_group_id]
+  allowed_security_group_ids  = [module.ecs.task_security_group_id, var.alb_security_group_id]
 
   tags                        = var.tags
+
+  depends_on                  = [module.ecs]
 }
