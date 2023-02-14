@@ -38,3 +38,24 @@ module "ecs" {
   assign_public_ip = true
   account_id = var.account_id
 }
+
+module "mq_broker" {
+  source = "../mq_broker"
+
+  name = "enpyre-play"
+  namespace = "pubnic"
+  environment = var.environment
+  stage = var.environment
+
+  mq_admin_password = var.mq_admin_password
+  mq_admin_user = var.mq_admin_user
+  mq_application_password = var.mq_application_password
+  mq_application_user = var.mq_application_user
+
+  vpc_id     = var.vpc_id
+  subnet_ids = var.subnet_ids
+
+  allowed_security_group_ids = [module.ecs.ecs_security_group_id, var.alb_security_group_id]
+
+  tags = var.tags
+}
