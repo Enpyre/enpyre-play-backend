@@ -26,6 +26,7 @@ module "mq_broker" {
   engine_version             = var.engine_version
   host_instance_type         = var.host_instance_type
   publicly_accessible        = var.publicly_accessible
+  create_security_group      = var.publicly_accessible ? false : true
   general_log_enabled        = var.general_log_enabled
   audit_log_enabled          = var.audit_log_enabled
   encryption_enabled         = var.encryption_enabled
