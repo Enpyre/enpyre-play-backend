@@ -18,3 +18,8 @@ JWT_SECRET_KEY = config('JWT_SECRET_KEY', default=None)
 
 PROJECT_LINK_BASE_URL = config('PROJECT_LINK_BASE_URL', default='https://localhost:3000/projects/')
 SENTRY_DSN = config('SENTRY_DSN', default=None)
+
+RABBITMQ_DEFAULT_QUEUE = config('CELERY_DEFAULT_QUEUE', default='default')
+RABBITMQ_BROKER_URL = config(
+    'CELERY_BROKER_URL', default='amqp://enpyre:enpyre@enpyre_rabbitmq:5672//'
+)
