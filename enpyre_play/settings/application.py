@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'enpyre_play.users',
     'enpyre_play.projects',
     'enpyre_play.quizzes',
+    'enpyre_play.scores',
 ]
 
 MIDDLEWARE = [

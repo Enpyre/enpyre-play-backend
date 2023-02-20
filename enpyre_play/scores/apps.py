@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProjectsConfig(AppConfig):
+class ScoresConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'enpyre_play.projects'
+    name = 'enpyre_play.scores'
