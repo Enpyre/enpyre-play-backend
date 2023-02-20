@@ -88,6 +88,7 @@ class UserScore(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.IntegerField(default=0)
     average = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    average_count = models.IntegerField(default=0)
 
     score = models.ForeignKey(Score, on_delete=models.CASCADE, related_name='user_scores')
 
@@ -97,3 +98,14 @@ class UserScore(models.Model):
             models.Index(fields=['-average'], name='user_average_idx'),
         ]
         ordering = ['-total']
+
+    @classmethod
+    def build(cls, user_id: int, score):
+        user_score, _ = cls.objects.get_or_create(user__id=user_id, score=score)
+        return user_score
+
+    def compute(self, score_amount):
+        self.total += score_amount
+        self.average_count += 1
+        self.average = self.total / self.average_count
+        self.save()
