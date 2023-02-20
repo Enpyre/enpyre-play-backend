@@ -1,12 +1,13 @@
 from rest_framework.serializers import ModelSerializer
 
+from enpyre_play.serializers import DynamicFieldsModelSerializer
 from enpyre_play.users.serializers import UserSerializer
 
 from .models import Score, UserScore
 
 
-class UserScoreSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
+class UserScoreSerializer(DynamicFieldsModelSerializer):
+    user = UserSerializer(read_only=True, exclude_fields=('email',))
 
     class Meta:
         model = UserScore
@@ -15,9 +16,9 @@ class UserScoreSerializer(ModelSerializer):
 
 
 class ScoreSerializer(ModelSerializer):
-    scores = UserScoreSerializer(many=True, read_only=True)
+    user_scores = UserScoreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Score
-        fields = ['scores']
-        read_only_fields = ['scores']
+        fields = ['score_type', 'year', 'month', 'week', 'user_scores']
+        read_only_fields = ['score_type', 'year', 'month', 'week', 'user_scores']

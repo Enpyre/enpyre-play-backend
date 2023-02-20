@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -10,4 +11,4 @@ from .models import Project
 @receiver(post_save, sender=Project)
 def compute_score_on_quizz_user_answer_save(sender, instance, created, **kwargs):
     if created and instance.public and instance.code:
-        compute_score.delay(instance.user_id, PROJECT_DEFAULT_SCORE_AMOUNT)
+        transaction.on_commit(compute_score.s(instance.user_id, PROJECT_DEFAULT_SCORE_AMOUNT).delay)

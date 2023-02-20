@@ -1,17 +1,15 @@
-from rest_framework import status
-from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+
+from enpyre_play.views import OnlyListModelViewSet
 
 from .models import Score
 from .pagination import ScorePaginationClass
-from .serializers import ScoreSerializer
+from .serializers import ScoreSerializer, UserScoreSerializer
 
 
-class ScoreViewSet(ModelViewSet):
+class ScoreViewSet(OnlyListModelViewSet):
     queryset = Score.objects.all().order_by('score_type', 'year', 'month', 'week')
     serializer_class = ScoreSerializer
     permission_classes = (IsAuthenticated,)
@@ -19,49 +17,49 @@ class ScoreViewSet(ModelViewSet):
     search_fields = ('score__year', 'score__month', 'score__week')
     pagination_class = ScorePaginationClass
 
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('GET')
 
-    def create(self, request, *args, **kwargs):
-        raise MethodNotAllowed('POST')
-
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PUT')
-
-    def partial_update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PATCH')
-
-    def destroy(self, request, *args, **kwargs):
-        raise MethodNotAllowed('DELETE')
-
-
-class CurrentWeeklyScoreView(APIView):
+class BaseUserScoreViewSet(OnlyListModelViewSet):
     permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        weekly_score = Score.get_weekly_score()
-        return Response(weekly_score, status=status.HTTP_200_OK)
-
-
-class CurrentMonthlyScoreView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        monthly_score = Score.get_monthly_score()
-        return Response(monthly_score, status=status.HTTP_200_OK)
+    filter_backends = (SearchFilter,)
+    search_fields = ('user__id', 'user__email')
+    pagination_class = PageNumberPagination
 
 
-class CurrentYearlyScoreView(APIView):
-    permission_classes = (IsAuthenticated,)
+class WeeklyUserScoreViewSet(BaseUserScoreViewSet):
+    def get_queryset(self):
+        return Score.get_weekly_score()
 
-    def get(self, request, *args, **kwargs):
-        yearly_score = Score.get_yearly_score()
-        return Response(yearly_score, status=status.HTTP_200_OK)
+    def get_serializer(self, *args, **kwargs):
+        kwargs.setdefault('context', self.get_serializer_context())
+        kwargs['exclude_fields'] = ('average',)
+        return UserScoreSerializer(*args, **kwargs)
 
 
-class CurrentGlobalScoreView(APIView):
-    permission_classes = (IsAuthenticated,)
+class MonthlyUserScoreViewSet(BaseUserScoreViewSet):
+    def get_queryset(self):
+        return Score.get_monthly_score()
 
-    def get(self, request, *args, **kwargs):
-        global_score = Score.get_global_score()
-        return Response(global_score, status=status.HTTP_200_OK)
+    def get_serializer(self, *args, **kwargs):
+        kwargs.setdefault('context', self.get_serializer_context())
+        kwargs['exclude_fields'] = ('average',)
+        return UserScoreSerializer(*args, **kwargs)
+
+
+class YearlyUserScoreViewSet(BaseUserScoreViewSet):
+    def get_queryset(self):
+        return Score.get_yearly_score()
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs.setdefault('context', self.get_serializer_context())
+        kwargs['exclude_fields'] = ('total',)
+        return UserScoreSerializer(*args, **kwargs)
+
+
+class GlobalUserScoreViewSet(BaseUserScoreViewSet):
+    def get_queryset(self):
+        return Score.get_global_score()
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs.setdefault('context', self.get_serializer_context())
+        kwargs['exclude_fields'] = ('total',)
+        return UserScoreSerializer(*args, **kwargs)

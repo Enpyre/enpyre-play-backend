@@ -9,7 +9,7 @@ from .models import Project
 
 
 class ProjectSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True, exclude_fields=('email',))
 
     class Meta:
         model = Project

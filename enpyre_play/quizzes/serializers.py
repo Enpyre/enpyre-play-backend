@@ -92,7 +92,7 @@ class QuizzQuestionSerializer(ModelSerializer):
 class QuizzSerializer(ModelSerializer):
     id = IntegerField(required=False, allow_null=True)
     questions = QuizzQuestionSerializer(many=True)
-    owner = UserSerializer(read_only=True)
+    owner = UserSerializer(read_only=True, exclude_fields=('email',))
 
     class Meta:
         model = Quizz
