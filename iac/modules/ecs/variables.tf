@@ -47,6 +47,7 @@ variable "image" {
 variable "container_port" {
   description = "The port to expose"
   type = number
+  default = null
 }
 
 variable "container_env" {
@@ -90,6 +91,7 @@ variable "deregistration_delay" {
 variable "health_check" {
   description = "The path to the health check for the load balancer to know if the container(s) are ready"
   type = string
+  default = "/"
 }
 
 variable "health_check_matcher" {
@@ -118,16 +120,19 @@ variable "route_zone_id" {
 variable "domain" {
   description = "The domain to use for the route53 record"
   type = string
+  default = null
 }
 
 variable "lb_dns_name" {
   description = "The dns name of the load balancer"
   type = string
+  default = null
 }
 
 variable "lb_zone_id" {
   description = "The zone id of the load balancer"
   type = string
+  default = null
 }
 
 variable "alb_security_group_id" {
@@ -171,4 +176,16 @@ variable "rollback_if_deployment_fails" {
   description = "If the deployment should rollback if it fails"
   type = bool
   default = true
+}
+
+variable "container_command" {
+  description = "The command to run for the task"
+  type = list(string)
+  default = []
+}
+
+variable "health_check_command" {
+  description = "The command to run for the health check"
+  type = list(string)
+  default = []
 }

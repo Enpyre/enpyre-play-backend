@@ -2,6 +2,8 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 
+from .mocks import *  # noqa
+
 
 @pytest.fixture
 def client():
@@ -9,7 +11,7 @@ def client():
 
 
 @pytest.fixture(scope='function')
-def django_db_setup(django_db_setup, django_db_blocker):
+def django_db_setup(django_db_setup, django_db_blocker, mock_all_compute_score_tasks):
     with django_db_blocker.unblock():
         from scripts import CleanDB, PopulateDB
 

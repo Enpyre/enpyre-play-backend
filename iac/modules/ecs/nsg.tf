@@ -8,6 +8,7 @@ resource "aws_security_group" "nsg_task" {
 
 # Rules for the TASK (Targets the LB SG)
 resource "aws_security_group_rule" "nsg_task_ingress_rule" {
+  count = var.container_port == null ? 0 : 1
   description              = "Only allow connections from SG ${var.app}-${var.environment}-lb on port ${var.container_port}"
   type                     = "ingress"
   from_port                = var.container_port
