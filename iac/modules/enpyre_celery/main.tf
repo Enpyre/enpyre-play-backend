@@ -25,8 +25,7 @@ module "ecs" {
   tags                                = var.tags
   deregistration_delay                = 5
   health_check_command = [
-    "doppler run --",
-    "celery -A enpyre_play status"
+    "doppler run -- celery -A enpyre_play status"
   ]
   route_zone_id                       = var.route_zone_id
   lb_dns_name                         = var.lb_dns_name
