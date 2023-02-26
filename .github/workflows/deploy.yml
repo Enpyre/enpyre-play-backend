@@ -177,5 +177,5 @@ jobs:
       # Force redeploy of the service
       - name: Force deployment
         run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_CELERY }} --service ${{ secrets.ECS_SERVICE_CELERY_CELERY }} --force-new-deployment
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_CELERY }} --service ${{ secrets.ECS_SERVICE_CELERY }} --force-new-deployment
           aws ecs wait services-stable --cluster ${{ secrets.ECS_CLUSTER_CELERY }} --services ${{ secrets.ECS_SERVICE_CELERY }}
