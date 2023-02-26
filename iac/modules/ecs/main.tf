@@ -54,7 +54,7 @@ resource "aws_ecs_task_definition" "app" {
       }
     },
     "healthCheck": {
-      "command": var.health_check_command == [] ? [
+      "command": var.health_check_command == null ? [
         "CMD-SHELL",
         "curl -f http://localhost:${var.container_port}${var.health_check} || exit 1"
       ] : concat([

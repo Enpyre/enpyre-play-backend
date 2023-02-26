@@ -187,5 +187,5 @@ variable "container_command" {
 variable "health_check_command" {
   description = "The command to run for the health check"
   type = list(string)
-  default = []
+  default = null
 }
