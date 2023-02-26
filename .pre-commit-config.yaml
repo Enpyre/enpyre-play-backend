@@ -15,8 +15,6 @@ repos:
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: debug-statements
-      - id: name-tests-test
-        args: [--django]
       # - id: no-commit-to-branch
       #   args: [--branch, master, --branch, main]
       - id: double-quote-string-fixer

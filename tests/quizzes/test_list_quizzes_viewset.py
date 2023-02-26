@@ -32,7 +32,6 @@ class TestListQuizzesViewSet:
 
         assert owner.pop('id') is not None
         assert owner == {
-            'email': 'test@enpyre.com.br',
             'first_name': 'Test',
             'last_name': 'User',
             'picture': 'https://api.dicebear.com/5.x/bottts-neutral/svg?seed=test&size=100&backgroundType=gradientLinear,solid',  # noqa

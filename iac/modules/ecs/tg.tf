@@ -1,4 +1,5 @@
 resource "aws_alb_target_group" "main" {
+  count               = var.container_port == null ? 0 : 1
   name                 = "${var.app}-${var.environment}"
   port                 = var.container_port
   protocol             = "HTTP"

@@ -13,9 +13,11 @@ INSTALLED_APPS = [
     'social_django',
     'rest_social_auth',
     'rest_framework_simplejwt.token_blacklist',
+    'django_celery_results',
     'enpyre_play.users',
     'enpyre_play.projects',
     'enpyre_play.quizzes',
+    'enpyre_play.scores',
 ]
 
 MIDDLEWARE = [
@@ -59,3 +61,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'enpyre_play.wsgi.application'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}

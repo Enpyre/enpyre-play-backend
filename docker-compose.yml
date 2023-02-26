@@ -28,3 +28,29 @@ services:
       - "5432:5432"
     networks:
       - default
+  enpyre_rabbitmq:
+    image: rabbitmq:3.10.10-management-alpine
+    container_name: enpyre_rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=enpyre
+      - RABBITMQ_DEFAULT_PASS=enpyre
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - default
+    logging:
+      driver: none
+  enpyre_celery:
+    env_file: .env
+    build:
+      context: .
+      args:
+        ENVIRONMENT: development
+        CELERY: true
+    volumes:
+      - .:/code/.
+    command: ["./start_celery.sh"]
+    depends_on:
+      - enpyre_postgres
+      - enpyre_rabbitmq

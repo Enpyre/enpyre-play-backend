@@ -82,7 +82,6 @@ class TestListProjectsViewset:
         }
         assert user.pop('id') is not None
         assert user == {
-            'email': 'test-shared-public@enpyre.com.br',
             'first_name': 'Test-shared-public',
             'last_name': 'User-shared-public',
             'picture': 'https://api.dicebear.com/5.x/bottts-neutral/svg?seed=test-shared-public&size=100&backgroundType=gradientLinear,solid',  # noqa
@@ -103,7 +102,6 @@ class TestListProjectsViewset:
         }
         assert user.pop('id') is not None
         assert user == {
-            'email': 'test-public@enpyre.com.br',
             'first_name': 'Test-public',
             'last_name': 'User-public',
             'picture': 'https://api.dicebear.com/5.x/bottts-neutral/svg?seed=test-public&size=100&backgroundType=gradientLinear,solid',  # noqa
@@ -124,7 +122,6 @@ class TestListProjectsViewset:
         }
         assert user.pop('id') is not None
         assert user == {
-            'email': 'test-shared@enpyre.com.br',
             'first_name': 'Test-shared',
             'last_name': 'User-shared',
             'picture': 'https://api.dicebear.com/5.x/bottts-neutral/svg?seed=test-shared&size=100&backgroundType=gradientLinear,solid',  # noqa
@@ -145,7 +142,6 @@ class TestListProjectsViewset:
         }
         assert user.pop('id') is not None
         assert user == {
-            'email': 'test@enpyre.com.br',
             'first_name': 'Test',
             'last_name': 'User',
             'picture': 'https://api.dicebear.com/5.x/bottts-neutral/svg?seed=test&size=100&backgroundType=gradientLinear,solid',  # noqa

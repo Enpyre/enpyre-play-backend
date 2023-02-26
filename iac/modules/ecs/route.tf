@@ -1,4 +1,5 @@
 resource "aws_route53_record" "www" {
+  count  = var.container_port == null ? 0 : 1
   zone_id = var.route_zone_id
   name    = var.domain
   type    = "A"

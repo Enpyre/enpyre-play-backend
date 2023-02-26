@@ -36,11 +36,12 @@ resource "aws_ecs_task_definition" "app" {
     "name": "${var.app}",
     "image": "${var.image}",
     "essential": true,
-    "portMappings": [
+    "command": var.container_command != [] ? var.container_command : null,
+    "portMappings": var.container_port == null ? [] : [
       {
-        "protocol": "tcp",
-        "containerPort": var.container_port
-        "hostPort": var.container_port
+        "containerPort": var.container_port,
+        "hostPort": var.container_port,
+        "protocol": "tcp"
       }
     ],
     "environment": var.container_env,
@@ -53,10 +54,12 @@ resource "aws_ecs_task_definition" "app" {
       }
     },
     "healthCheck": {
-      "command": [
+      "command": var.health_check_command == [] ? [
         "CMD-SHELL",
         "curl -f http://localhost:${var.container_port}${var.health_check} || exit 1"
-      ],
+      ] : concat([
+        "CMD-SHELL",
+      ], var.health_check_command),
       "interval": var.health_check_interval,
       "timeout": var.health_check_timeout,
       "retries": 3,
@@ -91,10 +94,14 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = var.assign_public_ip
   }
 
-  load_balancer {
-    target_group_arn = aws_alb_target_group.main.id
-    container_name   = var.app
-    container_port   = var.container_port
+  dynamic "load_balancer" {
+    for_each = var.container_port == null ? [] : [1]
+
+    content {
+      target_group_arn = aws_alb_target_group.main[0].id
+      container_name   = var.app
+      container_port   = var.container_port
+    }
   }
 
   tags                    = var.tags

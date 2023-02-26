@@ -58,3 +58,28 @@ module "enpyre_play" {
 
   depends_on              = [module.common]
 }
+
+module "enpyre_celery" {
+  source = "./modules/enpyre_celery"
+
+  environment             = var.environment
+  route_zone_id           = var.route_zone_id
+  lb_dns_name             = module.common.lb_dns_name
+  lb_zone_id              = module.common.lb_zone_id
+  region                  = var.region
+  subnet_ids              = var.public_subnets
+  doppler_token           = var.doppler_token
+  alb_security_group_id   = module.common.alb_security_group_id
+  vpc_id                  = var.vpc_id
+  listener_arn            = module.common.listener_arn
+  account_id              = var.account_id
+
+  mq_admin_password       = var.mq_admin_password
+  mq_admin_user           = var.mq_admin_user
+  mq_application_password = var.mq_application_password
+  mq_application_user     = var.mq_application_user
+
+  tags                    = var.tags
+
+  depends_on              = [module.common]
+}
