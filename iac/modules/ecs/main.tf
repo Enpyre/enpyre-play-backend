@@ -81,7 +81,7 @@ resource "aws_ecs_service" "app" {
   deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
   desired_count   = var.replicas
   force_new_deployment = true
-  health_check_grace_period_seconds = 60
+  health_check_grace_period_seconds = var.container_port == null ? null : 60
 
   deployment_circuit_breaker {
     enable = var.rollback_if_deployment_fails

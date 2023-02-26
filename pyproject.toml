@@ -38,8 +38,6 @@ psycopg2-binary = "^2.9.5"
 watchdog = {extras = ["watchmedo"], version = "^2.2.1"}
 pytest-celery = "^0.0.0"
 
-[tool.poetry.group.celery.dependencies]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

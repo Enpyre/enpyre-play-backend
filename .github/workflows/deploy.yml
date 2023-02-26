@@ -158,3 +158,24 @@ jobs:
         run: |
           aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service ${{ secrets.ECS_SERVICE }} --force-new-deployment
           aws ecs wait services-stable --cluster ${{ secrets.ECS_CLUSTER }} --services ${{ secrets.ECS_SERVICE }}
+  deploy_celery:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configurando as credenciais AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Force redeploy of the service
+      - name: Force deployment
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_CELERY }} --service ${{ secrets.ECS_SERVICE_CELERY_CELERY }} --force-new-deployment
+          aws ecs wait services-stable --cluster ${{ secrets.ECS_CLUSTER_CELERY }} --services ${{ secrets.ECS_SERVICE_CELERY }}
