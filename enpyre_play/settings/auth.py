@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from enpyre_play.envs import GITHUB_KEY, GITHUB_SECRET
+from enpyre_play.envs import AUTH_REDIRECT_URL, GITHUB_KEY, GITHUB_SECRET
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -48,7 +48,8 @@ SOCIAL_AUTH_GITHUB_KEY = GITHUB_KEY
 SOCIAL_AUTH_GITHUB_SECRET = GITHUB_SECRET
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email', 'read:user']
 
-REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'https://enpyre-play.vercel.app/login/callback/'
+# REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'https://enpyre-play.vercel.app/login/callback/'
+REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = AUTH_REDIRECT_URL
 REST_SOCIAL_VERBOSE_ERRORS = True
 
 SIMPLE_JWT = {
