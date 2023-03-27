@@ -1,4 +1,5 @@
 from django.db.models import QuerySet
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
@@ -50,14 +51,16 @@ class ProjectSulutionViewSet(RetrieveModelMixin, GenericAPIView):
         IsAuthenticated,
     ]
     queryset = ProjectSolution.objects.all()
+    lookup_field = 'project_id'
 
     def retrieve(self, request, *args, **kwargs):
-        project_solution = self.get_object()
+        project_id = kwargs['project_id']
 
-        if project_solution.user != request.user:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        return super().retrieve(request, *args, **kwargs)
+        project_solution = get_object_or_404(
+            ProjectSolution, project_id=project_id, user=request.user
+        )
+        serializer = self.serializer_class(project_solution)
+        return Response(serializer.data)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
