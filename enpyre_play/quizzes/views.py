@@ -2,8 +2,13 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Quizz, QuizzAnswer, QuizzQuestion
-from .serializers import QuizzAnswerSerializer, QuizzQuestionSerializer, QuizzSerializer
+from .models import Quizz, QuizzAnswer, QuizzQuestion, QuizzUserAnswer
+from .serializers import (
+    QuizzAnswerSerializer,
+    QuizzQuestionSerializer,
+    QuizzSerializer,
+    QuizzUserAnswerSerializer,
+)
 
 
 class QuizzViewSet(ModelViewSet):
@@ -65,3 +70,28 @@ class QuizzAnswerViewSet(ModelViewSet):
                 self.perform_create(serializer)
             return self.list(request, *args, **kwargs)
         return super().create(request, *args, **kwargs)
+
+
+class QuizzUserAnswerViewSet(ModelViewSet):
+    serializer_class = QuizzUserAnswerSerializer
+    permission_classes = (IsAuthenticated,)
+    # filter_backends = (SearchFilter,)
+    # search_fields = ('answer__title', 'answer__content')
+
+    def get_queryset(self):
+        return QuizzUserAnswer.objects.filter(
+            user=self.request.user,
+        )
+
+    def create(self, request, *args, **kwargs):
+        if isinstance(request.data, list):
+            data = request.data.copy()
+            for item in data:
+                serializer = self.get_serializer(data=item)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            return self.list(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)

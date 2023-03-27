@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import QuizzAnswerViewSet, QuizzQuestionViewSet, QuizzViewSet
+from .views import QuizzAnswerViewSet, QuizzQuestionViewSet, QuizzUserAnswerViewSet, QuizzViewSet
 
 questions_url = routers.DefaultRouter()
 questions_url.register('questions', QuizzQuestionViewSet, basename='quizzes-questions')
@@ -10,6 +10,7 @@ answers_url = routers.DefaultRouter()
 answers_url.register('answers', QuizzAnswerViewSet, basename='quizzes-questions-answers')
 
 router = routers.SimpleRouter()
+router.register('user-answers', QuizzUserAnswerViewSet, basename='quizzes-user-answers')
 router.register('', QuizzViewSet, basename='quizzes')
 
 urlpatterns = [

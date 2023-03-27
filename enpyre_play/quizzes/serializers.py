@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, 
 
 from enpyre_play.users.serializers import UserSerializer
 
-from .models import Quizz, QuizzAnswer, QuizzQuestion
+from .models import Quizz, QuizzAnswer, QuizzQuestion, QuizzUserAnswer
 
 
 class QuizzAnswerSerializer(ModelSerializer):
@@ -81,3 +81,18 @@ class QuizzSerializer(ModelSerializer):
                 answer.pop('quizz_id', None)
                 QuizzAnswer.objects.create(**answer, question=question)
         return quizz
+
+
+class QuizzUserAnswerSerializer(ModelSerializer):
+    quizz_id = PrimaryKeyRelatedField(source='answer.question.quizz', read_only=True)
+    question_id = PrimaryKeyRelatedField(source='answer.question', read_only=True)
+    answer_id = PrimaryKeyRelatedField(source='answer', queryset=QuizzAnswer.objects.all())
+    user_id = PrimaryKeyRelatedField(source='user', read_only=True)
+
+    class Meta:
+        model = QuizzUserAnswer
+        fields = ('id', 'answer_id', 'user_id', 'quizz_id', 'question_id')
+        read_only_fields = ('id', 'user_id', 'quizz_id', 'question_id')
+
+    # def create(self, validated_data):
+    #     return super().create(validated_data)
