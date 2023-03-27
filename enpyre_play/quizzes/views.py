@@ -1,11 +1,9 @@
-from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Quizz
-from .serializers import QuizzSerializer
+from .models import Quizz, QuizzAnswer, QuizzQuestion
+from .serializers import QuizzAnswerSerializer, QuizzQuestionSerializer, QuizzSerializer
 
 
 class QuizzViewSet(ModelViewSet):
@@ -15,27 +13,55 @@ class QuizzViewSet(ModelViewSet):
     filter_backends = (SearchFilter,)
     search_fields = ('title', 'description')
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            instance._prefetched_objects_cache = {}  # pylint: disable=protected-access
-
-        return Response(serializer.data)
-
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class QuizzQuestionViewSet(ModelViewSet):
+    serializer_class = QuizzQuestionSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (SearchFilter,)
+    search_fields = ('title', 'content')
+
+    def get_queryset(self):
+        return QuizzQuestion.objects.filter(
+            quizz__id=self.kwargs['quizz_pk'],
+        )
+
+    def create(self, request, *args, **kwargs):
+        if isinstance(request.data, list):
+            data = request.data.copy()
+            for item in data:
+                item['quizz_id'] = kwargs['quizz_pk']
+                serializer = self.get_serializer(data=item)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            return self.list(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
+
+
+class QuizzAnswerViewSet(ModelViewSet):
+    serializer_class = QuizzAnswerSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (SearchFilter,)
+    search_fields = ('title', 'content')
+
+    def get_queryset(self):
+        return QuizzAnswer.objects.filter(
+            question__id=self.kwargs['question_pk'],
+            question__quizz__id=self.kwargs['quizz_pk'],
+        )
+
+    def create(self, request, *args, **kwargs):
+        if isinstance(request.data, list):
+            data = request.data.copy()
+            for item in data:
+                item['question_id'] = kwargs['question_pk']
+                serializer = self.get_serializer(data=item)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+            return self.list(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
