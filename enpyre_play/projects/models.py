@@ -21,3 +21,13 @@ class Project(BaseModel):
 
     def __str__(self):
         return self.title
+
+
+class ProjectSolution(BaseModel):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='solutions')
+    code = models.TextField(null=True, blank=False, help_text='Solution for the project')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET(get_sentinel_user),
+        related_name='solutions',
+    )

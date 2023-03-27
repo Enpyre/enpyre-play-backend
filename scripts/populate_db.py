@@ -1,4 +1,5 @@
 from .populate_project import PopulateProject
+from .populate_project_solution import PopulateProjectSolution
 from .populate_quizz import PopulateQuizz
 from .populate_quizz_answer import PopulateQuizzAnswer
 from .populate_quizz_question import PopulateQuizzQuestion
@@ -12,15 +13,17 @@ class PopulateDB:
         user_shared_public = PopulateUser.run(suffix='shared-public')
         user_shared = PopulateUser.run(suffix='shared')
         user_public = PopulateUser.run(suffix='public')
-        PopulateProject.run(
+        project = PopulateProject.run(
             user, shared=False, public=False, link_uuid='e3b2b2f1-3b1f-4b1f-8c1f-1b1f3b1f4b1f'
         )
-        PopulateProject.run(
+        PopulateProjectSolution.run(user, project)
+        another_project = PopulateProject.run(
             user_shared_public,
             shared=True,
             public=True,
             link_uuid='ef772583-babd-4fd7-9729-15a3ed096719',
         )
+        PopulateProjectSolution.run(user_shared_public, another_project)
         PopulateProject.run(
             user_shared, shared=True, public=False, link_uuid='c3b2b2f1-3b1f-4b1f-8c1f-1b1f3b1f4b1f'
         )

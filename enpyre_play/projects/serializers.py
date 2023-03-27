@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 from enpyre_play.envs import PROJECT_LINK_BASE_URL
 from enpyre_play.users.serializers import UserSerializer
 
-from .models import Project
+from .models import Project, ProjectSolution
 
 
 class ProjectSerializer(ModelSerializer):
@@ -38,3 +38,9 @@ class ProjectSerializer(ModelSerializer):
         request = self.context.get('request')
         validated_data['user_id'] = request.user.id
         return super().create(validated_data)
+
+
+class ProjectSolutionSerializer(ModelSerializer):
+    class Meta:
+        model = ProjectSolution
+        fields = '__all__'

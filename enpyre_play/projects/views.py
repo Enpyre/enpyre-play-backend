@@ -1,12 +1,14 @@
 from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, ProjectSolution
+from .serializers import ProjectSerializer, ProjectSolutionSerializer
 
 
 class ProjectSearchFilter(SearchFilter):
@@ -40,3 +42,22 @@ class ProjectViewSet(ModelViewSet):
         if project.public or project.user == request.user:
             return super().retrieve(request, *args, **kwargs)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ProjectSulutionViewSet(RetrieveModelMixin, GenericAPIView):
+    serializer_class = ProjectSolutionSerializer
+    permission_classes = [
+        IsAuthenticated,
+    ]
+    queryset = ProjectSolution.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        project_solution = self.get_object()
+
+        if project_solution.user != request.user:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return super().retrieve(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
