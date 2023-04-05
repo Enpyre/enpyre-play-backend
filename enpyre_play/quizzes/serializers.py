@@ -53,12 +53,14 @@ class QuizzQuestionSerializer(ModelSerializer):
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
             return []
-        return (
+        answers = (
             QuizzUserAnswer.objects.filter(answer__question=obj, user=request.user)
             .order_by('answer_id')
             .distinct('answer_id')
-            .values_list('answer_id', flat=True)
+            .only('answer_id', 'answer__is_correct')
+            .values_list('answer_id', 'answer__is_correct')
         )
+        return [{'id': answer_id, 'is_correct': is_correct} for answer_id, is_correct in answers]
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
