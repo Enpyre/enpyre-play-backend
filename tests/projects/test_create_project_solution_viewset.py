@@ -12,7 +12,6 @@ class TestCreateProjectSolutionViewset:
             format='json',
         )
 
-        print(response.data)
         assert response.status_code == 201
         response_json: dict = response.json()
         assert response_json.pop('id') is not None

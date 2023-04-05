@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -45,7 +45,9 @@ class ProjectViewSet(ModelViewSet):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class ProjectSulutionViewSet(RetrieveModelMixin, CreateModelMixin, GenericAPIView):
+class ProjectSulutionViewSet(
+    RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, GenericAPIView
+):
     serializer_class = ProjectSolutionSerializer
     permission_classes = [
         IsAuthenticated,
@@ -53,26 +55,17 @@ class ProjectSulutionViewSet(RetrieveModelMixin, CreateModelMixin, GenericAPIVie
     queryset = ProjectSolution.objects.all()
     lookup_field = 'project_id'
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data={**request.data, 'user': request.user.id})
+    def get_object(self):
+        project_id = self.kwargs['project_id']
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, *args, **kwargs):
-        project_id = kwargs['project_id']
-
-        project_solution = get_object_or_404(
-            ProjectSolution, project_id=project_id, user=request.user
-        )
-        serializer = self.serializer_class(project_solution)
-        return Response(serializer.data)
+        return get_object_or_404(ProjectSolution, project_id=project_id, user=self.request.user)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id
         return self.create(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
