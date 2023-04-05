@@ -1,4 +1,9 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, ValidationError
+from rest_framework.serializers import (
+    ModelSerializer,
+    PrimaryKeyRelatedField,
+    SerializerMethodField,
+    ValidationError,
+)
 
 from enpyre_play.users.serializers import UserSerializer
 
@@ -37,11 +42,23 @@ class QuizzAnswerSerializer(ModelSerializer):
 class QuizzQuestionSerializer(ModelSerializer):
     quizz_id = PrimaryKeyRelatedField(source='quizz', queryset=Quizz.objects.all(), required=False)
     answers = QuizzAnswerSerializer(many=True, required=False)
+    user_answers = SerializerMethodField()
 
     class Meta:
         model = QuizzQuestion
-        fields = ('id', 'title', 'content', 'position', 'quizz_id', 'answers')
-        read_only_fields = ('id',)
+        fields = ('id', 'title', 'content', 'position', 'quizz_id', 'answers', 'user_answers')
+        read_only_fields = ('id', 'user_answers')
+
+    def get_user_answers(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return []
+        return (
+            QuizzUserAnswer.objects.filter(answer__question=obj, user=request.user)
+            .order_by('answer_id')
+            .distinct('answer_id')
+            .values_list('answer_id', flat=True)
+        )
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
