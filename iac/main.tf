@@ -3,7 +3,7 @@ terraform {
 
   backend "remote" {
     hostname = "app.terraform.io"
-    organization = "Pubnic"
+    organization = "NereSWE"
 
     workspaces {
       name = "enpyre-play-backend"
