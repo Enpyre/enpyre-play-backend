@@ -82,6 +82,7 @@ resource "aws_ecs_service" "app" {
   desired_count   = var.replicas
   force_new_deployment = true
   health_check_grace_period_seconds = var.container_port == null ? null : 60
+  enable_execute_command = true
 
   deployment_circuit_breaker {
     enable = var.rollback_if_deployment_fails

@@ -17,7 +17,11 @@ data "aws_iam_policy_document" "app_policy" {
       "ecs:DescribeClusters",
       "ecs:ListClusters",
       "ecs:ListContainerInstances",
-      "ecs:DescribeContainerInstances"
+      "ecs:DescribeContainerInstances",
+      "ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+      "ssmmessages:OpenDataChannel"
     ]
 
     resources = [
