@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'rest_social_auth',
     'rest_framework_simplejwt.token_blacklist',
     'django_celery_results',
+    'drf_spectacular',
     'enpyre_play.users',
     'enpyre_play.projects',
     'enpyre_play.quizzes',
@@ -38,6 +39,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 ROOT_URLCONF = 'enpyre_play.urls'

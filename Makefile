@@ -1,5 +1,5 @@
 dev-install:
-	poetry install --without only-prod
+	poetry install --without prod
 
 pc-config:
 	pre-commit install --install-hooks
