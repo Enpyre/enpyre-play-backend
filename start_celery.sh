@@ -34,8 +34,28 @@ echo "Starting celery"
 export COLUMNS=80
 
 if test $ENVIRONMENT = 'production' ; then
-CELERY_WORKER=1 celery -A enpyre_play worker -l info --without-heartbeat --without-gossip --without-mingle -Q $CELERY_DEFAULT_QUEUE
+    CELERY_WORKER=1 celery \
+        -A enpyre_play worker \
+        -l info \
+        --without-heartbeat \
+        --without-gossip \
+        --without-mingle \
+        -Q $CELERY_DEFAULT_QUEUE
 else
-watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A enpyre_play worker -l info -Q $CELERY_DEFAULT_QUEUE
+    watchmedo auto-restart \
+        --directory=./ \
+        --pattern=*.py \
+        --recursive \
+        --ignore-directories \
+        --verbose \
+        --no-restart-on-command-exit \
+        -- \
+        celery \
+        -A enpyre_play worker \
+        -l debug \
+        --without-heartbeat \
+        --without-gossip \
+        --without-mingle \
+        -Q $CELERY_DEFAULT_QUEUE
 fi
 wait

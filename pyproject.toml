@@ -37,7 +37,7 @@ pytest-env = "^0.8.1"
 pylint-django = "^2.5.3"
 django-stubs = {extras = ["compatible-mypy"], version = "^1.13.1"}
 mypy = "0.982"
-watchdog = {extras = ["watchmedo"], version = "^2.2.1"}
+watchdog = {extras = ["watchmedo"], version = "^3.0.0"}
 pytest-celery = "^0.0.0"
 
 [tool.poetry.group.mac.dependencies]

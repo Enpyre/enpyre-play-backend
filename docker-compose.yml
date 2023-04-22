@@ -47,7 +47,6 @@ services:
       context: .
       args:
         ENVIRONMENT: development
-        CELERY: true
     volumes:
       - .:/code/.
     command: ["./start_celery.sh"]
