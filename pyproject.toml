@@ -21,6 +21,7 @@ sentry-sdk = "^1.14.0"
 django-celery-results = "^2.4.0"
 celery = "^5.2.7"
 drf-spectacular = "^0.26.2"
+whitenoise = "^6.4.0"
 
 [tool.poetry.group.prod.dependencies]
 psycopg2 = "^2.9.5"
