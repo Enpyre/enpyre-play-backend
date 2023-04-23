@@ -81,6 +81,7 @@ class QuizzUserAnswerViewSet(ModelViewSet):
     def get_queryset(self):
         return QuizzUserAnswer.objects.filter(
             user=self.request.user,
+            answer__question__quizz__id=self.kwargs['quizz_pk'],
         )
 
     def create(self, request, *args, **kwargs):
